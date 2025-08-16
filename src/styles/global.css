@@ -1,44 +1,54 @@
-/* =========================
+/* =======================================================================
    THEME TOKENS
-   ========================= */
+   ======================================================================= */
 :root{
   --bg:#0b1220; --panel:#0f172a; --card:#0b1220;
   --muted:#94a3b8; --text:#e5e7eb;
-  --primary:#22c55e; --primary-2:#16a34a; --accent:#38bdf8; --danger:#ef4444;
+  --primary:#22c55e; --primary-2:#16a34a;
+  --accent:#38bdf8; --danger:#ef4444;
   --ring:0 0 0 3px rgba(34,197,94,.25);
-}
 
+  /* footer icons (neutro segun tema) */
+  --footer-icon: #9aa3b2;
+}
 html[data-theme="light"]{
   --bg:#f7f9fb; --panel:#ffffff; --card:#ffffff;
   --muted:#64748b; --text:#0f172a;
-  --primary:#22c55e; --primary-2:#16a34a; --accent:#0891b2; --danger:#dc2626;
+  --primary:#22c55e; --primary-2:#16a34a;
+  --accent:#0891b2; --danger:#dc2626;
   --ring:0 0 0 3px rgba(34,197,94,.25);
 }
+@media (prefers-color-scheme: light){ html:not([data-theme]){ color-scheme: light; } }
+@media (prefers-color-scheme: dark){  html:not([data-theme]){ color-scheme: dark;  } }
 
-@media (prefers-color-scheme: light){
-  html:not([data-theme]){ color-scheme: light; }
-}
-@media (prefers-color-scheme: dark){
-  html:not([data-theme]){ color-scheme: dark; }
-}
-
-/* =========================
+/* =======================================================================
    BASE
-   ========================= */
+   ======================================================================= */
 *{ box-sizing:border-box }
 html,body,#root{ height:100% }
 body{
   margin:0;
   font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  background:linear-gradient(180deg, color-mix(in oklab, var(--bg), #000 8%), var(--bg) 30% 70%, color-mix(in oklab, var(--bg), #000 8%));
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--bg), #000 8%),
+    var(--bg) 30% 70%,
+    color-mix(in oklab, var(--bg), #000 8%)
+  );
   color:var(--text);
 }
 a{ color:inherit; text-decoration:none }
-.container{ max-width:1200px; margin:0 auto; padding:16px }
+.container{ width:100%; max-width:1200px; margin:0 auto; padding:16px }
 
-/* =========================
+/* Imágenes fluidas */
+img{ max-width:100%; height:auto; display:block; border-radius:12px; }
+
+/* Layout principal (empuja el footer al fondo) */
+.layout{ min-height:100vh; display:flex; flex-direction:column; }
+.page-main{ flex:1; padding-top:18px; }
+
+/* =======================================================================
    HEADER (PÚBLICO)
-   ========================= */
+   ======================================================================= */
 .header{
   position:sticky; top:0; z-index:10;
   background:color-mix(in oklab, var(--panel), transparent 25%);
@@ -47,8 +57,6 @@ a{ color:inherit; text-decoration:none }
 }
 .header-inner{ display:flex; justify-content:space-between; align-items:center; padding:12px 16px }
 .brand{ font-weight:700; font-size:18px; white-space:nowrap; }
-
-/* Búsqueda pública */
 .search-wrap{ flex:1; display:flex; }
 .search-input{
   width:100%; max-width:540px;
@@ -58,6 +66,7 @@ a{ color:inherit; text-decoration:none }
 }
 .search-input:focus{ outline:none; box-shadow:var(--ring); border-color:var(--primary) }
 .header-actions{ display:flex; gap:8px; align-items:center; }
+.desktop-only{ display: initial; }
 
 @media (max-width: 680px){
   .brand{ font-size:16px; }
@@ -69,11 +78,12 @@ a{ color:inherit; text-decoration:none }
   .header-inner{ gap:6px; justify-content:space-between; }
   .brand{ font-size:15px; max-width:140px; overflow:hidden; text-overflow:ellipsis; }
   .btn-text{ display:none; }
+  .desktop-only{ display:none !important; }
 }
 
-/* =========================
-   BOTONES / INPUTS / CARDS
-   ========================= */
+/* =======================================================================
+   CONTROLES (Botones / Inputs / Cards)
+   ======================================================================= */
 .btn{
   background: var(--primary); color:#0b1220;
   border:0; padding:10px 14px; border-radius:12px; cursor:pointer;
@@ -102,19 +112,41 @@ input:focus,select:focus{ outline:none; box-shadow:var(--ring); border-color:var
 .section-title{ margin:6px 0 12px; font-size:22px }
 .price{ font-weight:700 }
 
-/* Footer público */
-.footer{ border-top:1px solid color-mix(in oklab, var(--muted), transparent 85%); background:var(--panel); margin-top:32px }
+/* =======================================================================
+   FOOTER (público)
+   ======================================================================= */
+.footer{
+  border-top:1px solid color-mix(in oklab, var(--muted), transparent 85%);
+  background:var(--panel);
+  margin-top:32px;
+}
 .footer-inner{ display:flex; justify-content:space-between; align-items:center; padding:18px 16px; font-size:14px; color:var(--muted) }
+.footer-copy{ display:flex; flex-direction:column; gap:4px; font-size:.95rem; }
+.footer-title{ font-weight:700; }
+.footer-dev{ font-size:.85rem; opacity:.8; }
 .badge{ display:inline-block; padding:4px 10px; border-radius:999px; background:color-mix(in oklab, var(--panel), #000 8%); color:var(--muted); font-size:12px; border:1px solid color-mix(in oklab, var(--muted), transparent 80%) }
 
-/* =========================
-   UTILIDADES & GRIDS
-   ========================= */
-@media (max-width: 480px){ :root{ --container-pad:12px; } }
-@media (min-width: 481px){ :root{ --container-pad:16px; } }
-.container{ padding: var(--container-pad,16px); }
+/* redes */
+.footer-socials{ display:flex; gap:16px; font-size:1.6rem; }
+.footer-socials .ico{
+  color: var(--footer-icon);
+  transition: color .2s ease, transform .15s ease, box-shadow .15s ease;
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius:10px; padding:2px; outline:none;
+}
+.footer-socials .ico:hover{ transform: translateY(-1px); }
+.footer-socials .ico:focus-visible{ box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 75%); }
+.footer-socials .ico-wa:hover, .footer-socials .ico-wa:focus-visible{ color:#25D366; }
+.footer-socials .ico-fb:hover, .footer-socials .ico-fb:focus-visible{ color:#1877F2; }
+.footer-socials .ico-mail:hover, .footer-socials .ico-mail:focus-visible{ color:#EA4335; }
+.footer-socials .ico-tt:hover, .footer-socials .ico-tt:focus-visible{ color:#000; }
+html[data-theme="dark"] .footer-socials .ico-tt:hover,
+html[data-theme="dark"] .footer-socials .ico-tt:focus-visible{ color:#fff; }
+.footer-socials .ico-ig:hover, .footer-socials .ico-ig:focus-visible{ color:#E1306C; }
 
-/* grilla de cards de productos */
+/* =======================================================================
+   UTILIDADES & GRIDS
+   ======================================================================= */
 .grid-cards{
   display:grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -123,26 +155,22 @@ input:focus,select:focus{ outline:none; box-shadow:var(--ring); border-color:var
 @media (min-width: 480px){ .grid-cards{ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
 @media (min-width: 768px){ .grid-cards{ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:18px; } }
 
-/* formularios admin */
 .form-grid{ display:grid; gap:12px; grid-template-columns: 1fr; }
 @media (min-width: 768px){ .form-grid{ grid-template-columns: 1fr 1fr; } }
 
-/* bloques de imágenes */
 .image-grid{ display:grid; gap:12px; grid-template-columns: 1fr; }
 @media (min-width: 640px){ .image-grid{ grid-template-columns: 1fr 1fr; } }
 @media (min-width: 1024px){ .image-grid{ grid-template-columns: 1fr 1fr 1fr; } }
 
-/* detalle de producto */
 .product-detail-grid{ display:grid; gap:16px; }
 @media (min-width: 900px){ .product-detail-grid{ grid-template-columns: 1fr 1fr; align-items:start; } }
-.product-detail-img{ width:100%; border-radius:12px; }
+.product-detail-img{ width:100%; border-radius:12px; max-height:350px; object-fit:contain; margin:0 auto; }
 
-/* carrito */
 .cart-row{
-  display:grid;
-  grid-template-columns: 64px 1fr auto;
-  gap:12px; align-items:center;
-  background: var(--card); border-radius:12px; padding:8px;
+  display:grid; grid-template-columns: 64px 1fr auto;
+  gap:12px; align-items:center; background: var(--card);
+  border-radius:12px; padding:8px;
+  border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
 }
 .cart-actions{ text-align:right; }
 @media (max-width: 420px){
@@ -150,14 +178,9 @@ input:focus,select:focus{ outline:none; box-shadow:var(--ring); border-color:var
   .cart-row .cart-actions{ grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
 }
 
-/* imágenes fluidas */
-img{ max-width:100%; height:auto; display:block; border-radius:12px; }
-.desktop-only{ display: initial; }
-@media (max-width: 640px){ .desktop-only{ display:none !important; } }
-
-/* =========================
-   SHEET / OVERLAYS (público)
-   ========================= */
+/* =======================================================================
+   SHEET / OVERLAYS (público) — CATEGORÍAS COMPACTAS
+   ======================================================================= */
 .sheet{ position:fixed; inset:0; z-index:50; }
 .sheet-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.45); animation: sheetfade .15s ease-out; }
 .sheet-panel{
@@ -167,12 +190,58 @@ img{ max-width:100%; height:auto; display:block; border-radius:12px; }
   box-shadow: -16px 0 40px rgba(0,0,0,.35);
   display:flex; flex-direction:column; animation: sheetslide .2s ease-out;
 }
-.sheet-header{ display:flex; justify-content:space-between; align-items:center; padding:14px 16px; border-bottom:1px solid color-mix(in oklab, var(--muted), transparent 85%); }
-.sheet-list{ padding:12px; display:grid; gap:10px; }
-.sheet-item{ display:block; padding:12px 14px; border-radius:12px; background:var(--card); border:1px solid color-mix(in oklab, var(--muted), transparent 85%); }
-.sheet-item:hover{ filter:brightness(.98) }
-.sheet-footer{ padding:12px 16px; color:var(--muted); border-top:1px solid color-mix(in oklab, var(--muted), transparent 85%); }
 
+/* Abre desde la izquierda cuando usa .sheet--left */
+.sheet--left .sheet-panel{ left:0; right:auto; box-shadow:16px 0 40px rgba(0,0,0,.35); animation: sheetslideLeft .2s ease-out; }
+
+.sheet-header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:10px 12px;
+  border-bottom:1px solid color-mix(in oklab, var(--muted), transparent 85%);
+}
+.sheet-header .btn.light{ padding:6px 10px; border-radius:10px; }
+
+/* Lista plana (sin tarjetas) */
+.sheet-list{ padding:6px 8px 0; display:block; }
+.sheet-item{
+  display:flex; align-items:center;
+  min-height:44px; padding:10px 12px;
+  background:transparent !important; border:0 !important; border-radius:0 !important; box-shadow:none !important;
+  color:var(--text);
+}
+.sheet-item + .sheet-item{ border-top:1px solid color-mix(in oklab, var(--muted), transparent 85%); }
+.sheet-item:hover{ background: color-mix(in oklab, var(--panel), transparent 92%); }
+
+.sheet-footer{
+  padding:10px 12px 12px; color:var(--muted);
+  border-top:1px solid color-mix(in oklab, var(--muted), transparent 85%);
+}
+.sheet-hint{ font-size:.95rem; }
+
+/* Logo responsivo como marca de agua */
+.sheet-logo{ position:relative; display:grid; place-items:center; margin-top:6px; min-height:clamp(80px,22vh,220px); overflow:hidden; }
+.sheet-logo img{
+  opacity:.90; filter:saturate(.9);
+  width:auto; height:clamp(120px,35vh,300px);
+  max-width:90%; object-fit:contain;
+  transition: height .2s ease, opacity .2s ease;
+}
+:root[data-theme="dark"] .sheet-logo img{ opacity:.90; }
+@media (max-height:740px){ .sheet-logo{ min-height:clamp(60px,18vh,180px) } .sheet-logo img{ height:clamp(100px,28vh,240px) } }
+@media (max-height:600px){ .sheet-logo{ min-height:clamp(48px,16vh,160px) } .sheet-logo img{ height:clamp(90px,24vh,200px); opacity:.08 } }
+
+/* Tema oscuro: divisores/hover calibrados */
+:root[data-theme="dark"] .sheet-item + .sheet-item{ border-top-color: rgba(255,255,255,.08); }
+:root[data-theme="dark"] .sheet-item:hover{ background: rgba(255,255,255,.05); }
+
+/* Animaciones */
+@keyframes sheetslide{ from{ transform: translateX(20px); opacity:.8; } to{ transform:none; opacity:1; } }
+@keyframes sheetslideLeft{ from{ transform: translateX(-20px); opacity:.8; } to{ transform:none; opacity:1; } }
+@keyframes sheetfade{ from{ opacity:0; } to{ opacity:1; } }
+
+/* =======================================================================
+   OVERLAY DE BÚSQUEDA (si lo usas)
+   ======================================================================= */
 .ovr{ position:fixed; inset:0; z-index:60; }
 .ovr-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.55); animation: sheetfade .15s ease-out; }
 .ovr-panel{
@@ -200,20 +269,14 @@ img{ max-width:100%; height:auto; display:block; border-radius:12px; }
 .ovr-item-name{ font-weight:600; }
 .ovr-item-meta{ color:var(--muted); }
 
-@keyframes sheetslide{ from{ transform: translateX(20px); opacity:.8; } to{ transform:none; opacity:1; } }
-@keyframes sheetfade{ from{ opacity:0; } to{ opacity:1; } }
-
-/* =========================
+/* =======================================================================
    LISTADO ADMIN (filas)
-   ========================= */
+   ======================================================================= */
 .admin-row{
-  display:grid;
-  grid-template-columns: 64px 1fr auto;
-  gap:12px; align-items:center;
-  background: var(--card);
+  display:grid; grid-template-columns: 64px 1fr auto;
+  gap:12px; align-items:center; background: var(--card);
   border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  border-radius:12px;
-  padding:8px;
+  border-radius:12px; padding:8px;
 }
 .admin-actions{ display:flex; gap:8px; justify-content:flex-end; }
 @media (max-width: 520px){
@@ -221,542 +284,130 @@ img{ max-width:100%; height:auto; display:block; border-radius:12px; }
   .admin-actions{ grid-column: 1 / -1; justify-content:flex-end; }
 }
 
-/* =========================
-   ADMIN SHELL (SIDEBAR + HEADER)
-   ========================= */
-.admin-shell{
-  display:grid;
-  grid-template-columns: 260px 1fr;
-  min-height: 100dvh;
+/* Imágenes en admin / inventario */
+.admin-row img, .inventory-table img{
+  max-width:80px; height:auto; border-radius:8px; object-fit:cover;
+}
+@media (max-width: 640px){
+  .admin-row img, .inventory-table img{
+    width:48px; height:48px; max-width:48px; max-height:48px;
+  }
 }
 
-/* Sidebar (desktop: NO fijo) */
+/* =======================================================================
+   ADMIN SHELL (SIDEBAR + HEADER)
+   ======================================================================= */
+.admin-shell{ display:grid; grid-template-columns:260px 1fr; min-height:100dvh; }
+
+/* Sidebar (desktop no fijo) */
 .admin-aside{
-  position: static;             /* se desplaza con la página */
-  top: auto; align-self: stretch;
-  height: auto;
-  background: var(--panel);
-  border-right: 1px solid color-mix(in oklab, var(--muted), transparent 80%);
-  padding: 16px 12px;
-  display:flex; flex-direction:column; gap:12px;
-  z-index: 1;
+  position:static; height:auto; align-self:stretch;
+  background:var(--panel);
+  border-right:1px solid color-mix(in oklab, var(--muted), transparent 80%);
+  padding:16px 12px; display:flex; flex-direction:column; gap:12px; z-index:1;
 }
 .admin-aside-brand{
-  font-weight: 800; font-size: 18px; padding: 6px 8px; border-radius:10px;
+  font-weight:800; font-size:18px; padding:6px 8px; border-radius:10px;
   background: color-mix(in oklab, var(--card), #000 6%);
   border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
 }
-.admin-nav{ display:grid; gap:6px; margin-top: 4px; }
+.admin-nav{ display:grid; gap:6px; margin-top:4px; }
 .admin-nav-item{
-  display:flex; align-items:center; gap:10px;
-  padding:10px 12px; border-radius:10px;
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px;
   background: var(--card);
   border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
 }
 .admin-nav-item:hover{ filter:brightness(.98); }
-.admin-nav-item.active{
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(34,197,94,.12) inset;
-}
+.admin-nav-item.active{ border-color:var(--primary); box-shadow:0 0 0 3px rgba(34,197,94,.12) inset; }
 .admin-nav-ico{ width:20px; text-align:center; }
 .admin-nav-text{ font-weight:600; }
 .admin-aside-footer{ margin-top:auto; display:grid; gap:8px; }
 
-/* Header del admin */
-.admin-main{ display:grid; grid-template-rows: auto 1fr; }
+.admin-main{ display:grid; grid-template-rows:auto 1fr; }
 .admin-header{
-  position: sticky; top:0; z-index:10;
-  display:flex; align-items:center; gap:10px;
-  background: color-mix(in oklab, var(--panel), transparent 20%);
-  backdrop-filter: blur(8px);
-  border-bottom:1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  padding: 10px 16px;
+  position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:10px;
+  background: color-mix(in oklab, var(--panel), transparent 20%); backdrop-filter: blur(8px);
+  border-bottom:1px solid color-mix(in oklab, var(--muted), transparent 85%); padding:10px 16px;
 }
 .admin-title{ margin:0; font-size:18px; font-weight:800; }
 .only-mobile{ display:none; }
-.admin-content{ padding: 16px; }
+.admin-content{ padding:16px; }
 
-/* Responsive: sidebar como drawer en móvil */
+/* Sidebar como drawer en móvil */
 @media (max-width: 920px){
-  .admin-shell{ grid-template-columns: 1fr; }
+  .admin-shell{ grid-template-columns:1fr; }
   .admin-aside{
-    position: fixed; left: -280px; top: 0; bottom: 0; width: 260px;
-    height: 100dvh; transition: left .2s ease;
-    border-right: 1px solid color-mix(in oklab, var(--muted), transparent 80%);
-    border-radius: 0; z-index: 30; padding-top: 16px;
+    position:fixed; left:-280px; top:0; bottom:0; width:260px; height:100dvh;
+    transition:left .2s ease; border-right:1px solid color-mix(in oklab, var(--muted), transparent 80%); border-radius:0; z-index:30; padding-top:16px;
   }
-  .admin-shell.aside-open .admin-aside{ left: 0; }
-  .admin-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 20; }
+  .admin-shell.aside-open .admin-aside{ left:0; }
+  .admin-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:20; }
   .only-mobile{ display:inline-flex; }
 }
 
-/* =========================
-   ADMIN TOPBAR / DROPDOWN (si lo usas en páginas)
-   ========================= */
-.admin-topbar{
-  display:flex; justify-content:space-between; align-items:center; gap:12px;
-  background: color-mix(in oklab, var(--panel), transparent 25%);
-  backdrop-filter: blur(8px);
-  border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  border-radius:14px; padding:10px 12px; z-index: 5;
-}
-.admin-topbar-left{ display:flex; align-items:center; gap:10px; }
-.admin-topbar-right{ display:flex; align-items:center; gap:8px; }
-
+/* =======================================================================
+   DROPDOWN (único bloque)
+   ======================================================================= */
 .dropdown{ position:relative; }
 .dropdown-menu{
-  position:absolute; top:110%; left:0; min-width:220px;
-  background: var(--panel);
-  border:1px solid color-mix(in oklab, var(--muted), transparent 80%);
-  border-radius:12px; box-shadow: 0 12px 40px rgba(0,0,0,.35);
-  padding:8px; display:grid; gap:6px; z-index:20;
+  position:absolute; min-width:240px; top:calc(100% + 8px); left:0;
+  background:var(--panel); border:1px solid color-mix(in oklab, var(--muted), transparent 80%);
+  border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.35);
+  padding:8px; display:grid; gap:6px; z-index:50; max-height:70vh; overflow:auto;
 }
+.dropdown-menu.up{ top:auto; bottom:calc(100% + 8px); }
 .dropdown-menu a, .dropdown-menu .dropdown-item{
-  display:block; background: var(--card);
+  display:flex; align-items:center; gap:8px; background:var(--card);
   border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  border-radius:10px; padding:10px 12px; color:var(--text); text-align:left; cursor:pointer;
+  border-radius:10px; padding:10px 12px; color:var(--text); cursor:pointer; text-align:left;
 }
 .dropdown-menu a:hover, .dropdown-menu .dropdown-item:hover{ filter:brightness(.98) }
-.dropdown-menu hr{ border:none; height:1px; background: color-mix(in oklab, var(--muted), transparent 85%); margin: 6px 4px; }
-.dropdown-menu .danger{ background: color-mix(in oklab, var(--danger), transparent 90%); border-color: color-mix(in oklab, var(--danger), transparent 70%); }
-.admin-topbar h2{ font-size:20px; }
-@media (max-width: 520px){ .admin-topbar h2{ font-size:18px; } }
-
-
-/* ===============================
-   Ajuste de imágenes en Admin
-   =============================== */
-/* ===============================
-   Ajuste de imágenes en Admin (desktop y móvil)
-   =============================== */
-.admin-row img,
-.inventory-table img {
-  max-width: 80px;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-@media (max-width: 640px) {
-  .admin-row img,
-  .inventory-table img {
-    width: 48px;
-    height: 48px;
-    max-width: 48px;
-    max-height: 48px;
-  }
-}
-
-
-/* ===== Inventario: tamaño consistente de miniaturas ===== */
-.inv-thumb{
-  width: 100%;
-  max-width: 300px;      /* límite en desktop */
-  height: 180px;         /* alto fijo para uniformar */
-  object-fit: cover;     /* recorta sin deformar */
-  border-radius: 10px;
-  display: block;
-}
-
-/* En grids de producto del inventario, centra la miniatura y evita que se estire */
-.inventory-grid .card{
-  display: grid;
-  gap: 6px;
-  justify-items: center; /* centra la imagen */
-}
-.inventory-grid .card .inv-thumb{
-  width: 100%;
-  max-width: 180px;      /* un poco más compacto dentro del grid */
-}
-
-/* Responsive: en móviles deja algo más alto para que se vea mejor */
-@media (max-width: 640px){
-  .inv-thumb{
-    max-width: 140px;
-    height: 120px;
-  }
-}
-
-
-
-
-
-
-
-
-
-/* Panel por defecto: derecha (lo que ya tienes) */
-/* .sheet-panel { right:0; ... } */
-
-/* Variante que abre desde la izquierda */
-.sheet--left .sheet-panel{
-  left: 0;
-  right: auto;
-  box-shadow: 16px 0 40px rgba(0,0,0,.35); /* sombra hacia la derecha */
-}
-
-/* Animación específica para la izquierda */
-@keyframes sheetslideLeft{
-  from{ transform: translateX(-20px); opacity:.8; }
-  to{ transform:none; opacity:1; }
-}
-.sheet--left .sheet-panel{ animation: sheetslideLeft .2s ease-out; }
-
-
-
-/* src/styles.css o tu hoja de estilos */
-.product-detail-img {
-  max-height: 350px; /* o el tamaño que prefieras */
-  width: auto;
-  object-fit: contain; /* para que no se deforme */
-  display: block;
-  margin: 0 auto; /* centrado horizontal */
-}
-
-
-/* Asegura que la página pueda medir altura completa */
-html, body, #root {
-  height: 100%;
-}
-
-/* El wrapper del Layout ocupa toda la ventana */
-.layout {
-  min-height: 100vh;          /* altura completa */
-  display: flex;
-  flex-direction: column;
-}
-
-/* El main crece y empuja el footer al fondo */
-.page-main {
-  flex: 1;
-  padding-top: 18px;          /* el padding que ya usabas */
-}
-
-/* (Opcional) Si alguna tarjeta corta se “come” el alto, permite estirar */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--container-pad, 16px);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Dropdown base */
-.dropdown { position: relative; }
-
-/* Menú: compacto, con scroll si es alto */
-.dropdown-menu{
-  position:absolute;
-  min-width: 240px;
-  top: calc(100% + 8px);  /* por defecto abre hacia abajo */
-  left: 0;
-  background: var(--panel);
-  border: 1px solid color-mix(in oklab, var(--muted), transparent 80%);
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.35);
-  padding: 8px;
-  display: grid;
-  gap: 6px;
-  z-index: 50;
-  max-height: 70vh;      /* evita que se salga de pantalla */
-  overflow: auto;
-}
-
-/* Cuando auto-flip decida abrir hacia arriba */
-.dropdown-menu.up {
-  top: auto;
-  bottom: calc(100% + 8px);
-}
-
-/* Ítems más compactos dentro del dropdown */
-.dropdown-menu a,
-.dropdown-menu .dropdown-item{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--card);
-  border: 1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-}
-.dropdown-menu a:hover,
-.dropdown-menu .dropdown-item:hover{ filter:brightness(.98); }
-
-/* Compacta los botones dentro del dropdown */
-.dropdown-menu .btn{
-  width: 100%;
-  justify-content: flex-start;
-  padding: 10px 12px;
-  border-radius: 10px;
-  box-shadow: none;      /* que no se vea “botón principal” */
-}
-
-/* Separador */
-.dropdown-menu hr{
-  border: none; height: 1px;
-  background: color-mix(in oklab, var(--muted), transparent 85%);
-  margin: 6px 4px;
-}
-
-/* Peligro */
+.dropdown-menu .btn{ width:100%; justify-content:flex-start; padding:10px 12px; border-radius:10px; box-shadow:none; }
+.dropdown-menu hr{ border:none; height:1px; background:color-mix(in oklab, var(--muted), transparent 85%); margin:6px 4px; }
 .dropdown-menu .danger{
   background: color-mix(in oklab, var(--danger), transparent 90%);
   border-color: color-mix(in oklab, var(--danger), transparent 70%);
 }
 
-
-/* Menú flotante fijo (portal) */
-.dropdown-menu-fixed{
-  background: var(--panel);
-  border: 1px solid color-mix(in oklab, var(--muted), transparent 80%);
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.35);
-  padding: 8px;
-  display: grid;
-  gap: 6px;
-  z-index: 1000;
-  max-height: 70vh;   /* evita que se salga de pantalla */
-  overflow: auto;
+/* =======================================================================
+   INVENTARIO: miniaturas
+   ======================================================================= */
+.inv-thumb{
+  width:100%; max-width:300px; height:180px; object-fit:cover; border-radius:10px; display:block;
+}
+.inventory-grid .card{ display:grid; gap:6px; justify-items:center; }
+.inventory-grid .card .inv-thumb{ width:100%; max-width:180px; }
+@media (max-width: 640px){
+  .inv-thumb{ max-width:140px; height:120px; }
 }
 
-.dropdown-menu-fixed a,
-.dropdown-menu-fixed .dropdown-item{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--card);
-  border: 1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: var(--text);
-  cursor: pointer;
-  text-align: left;
-}
-.dropdown-menu-fixed a:hover,
-.dropdown-menu-fixed .dropdown-item:hover{ filter:brightness(.98); }
-
-.dropdown-menu-fixed hr{
-  border: none;
-  height: 1px;
-  background: color-mix(in oklab, var(--muted), transparent 85%);
-  margin: 6px 4px;
-}
-
-.dropdown-menu-fixed .danger{
-  background: color-mix(in oklab, var(--danger), transparent 90%);
-  border-color: color-mix(in oklab, var(--danger), transparent 70%);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* global.css */
-:root .sheet-logo img { opacity: .10; }
-:root[data-theme="dark"] .sheet-logo img { opacity: .50; } /* un pelín más visible en oscuro */
-
-
-
-
-
-
-
-
-/* Base: neutro + transición */
-.footer-socials { display:flex; gap:16px; font-size:1.6rem; }
-.footer-socials .ico {
-  color: var(--footer-icon);               /* neutro según tema */
-  transition: color .2s ease, transform .15s ease, box-shadow .15s ease;
-  display:inline-flex; align-items:center; justify-content:center;
-  border-radius:10px; padding:2px;
-  outline:none;
-}
-.footer-socials .ico:hover { transform: translateY(-1px); }
-.footer-socials .ico:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary), transparent 75%);
-}
-
-/* Colores corporativos AL HOVER (y focus) */
-.footer-socials .ico-wa:hover,
-.footer-socials .ico-wa:focus-visible { color:#25D366; }   /* WhatsApp */
-
-.footer-socials .ico-fb:hover,
-.footer-socials .ico-fb:focus-visible { color:#1877F2; }   /* Facebook */
-
-.footer-socials .ico-mail:hover,
-.footer-socials .ico-mail:focus-visible { color:#EA4335; } /* Gmail rojo */
-
-.footer-socials .ico-tt:hover,
-.footer-socials .ico-tt:focus-visible { color:#000; }      /* TikTok negro base */
-body[data-theme="dark"] .footer-socials .ico-tt:hover,
-body[data-theme="dark"] .footer-socials .ico-tt:focus-visible { color:#fff; }
-
-.footer-socials .ico-ig:hover,
-.footer-socials .ico-ig:focus-visible { 
-  /* Gradiente IG simulado: dejamos un color cercano */
-  color:#E1306C;
-}
-
-/* Si los quieres SIEMPRE con color corporativo (no solo hover):
-.footer-socials .ico-wa { color:#25D366; }
-.footer-socials .ico-fb { color:#1877F2; }
-.footer-socials .ico-mail { color:#EA4335; }
-.footer-socials .ico-tt { color:#000; }
-body[data-theme="dark"] .footer-socials .ico-tt { color:#fff; }
-.footer-socials .ico-ig { color:#E1306C; }
-*/
-
-.footer-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.95rem;
-}
-
-.footer-title {
-  font-weight: bold;
-}
-
-.footer-dev {
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
-
-
-
-.admin-hidden-btn {
-  margin-left: 10px;
-  background: crimson;
-  color: white;
-  font-size: 0.8rem;
-  padding: 4px 10px;
-  border-radius: 4px;
-}
-
-
-/* en tu global.css */
+/* =======================================================================
+   ELEMENTOS VARIOS
+   ======================================================================= */
 .admin-hidden-btn{
-  margin-left: 10px;
-  background: crimson;
-  color: #fff;
-  font-size: .85rem;
-  padding: 4px 10px;
-  border-radius: 6px;
+  margin-left:10px; background:crimson; color:#fff;
+  font-size:.85rem; padding:4px 10px; border-radius:6px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ===== Admin Login (solo UI) ===== */
-.auth-wrap{
-  min-height: clamp(68vh, 76vh, 84vh);
-  display:grid;
-  place-items:center;
-  padding: 24px 0;
-}
-
+/* =======================================================================
+   AUTH (login admin) — solo UI
+   ======================================================================= */
+.auth-wrap{ min-height:clamp(68vh, 76vh, 84vh); display:grid; place-items:center; padding:24px 0; }
 .auth-card{
-  width: 100%;
-  max-width: 420px;
-  padding: 18px 16px;
-  border-radius: 16px;
+  width:100%; max-width:420px; padding:18px 16px; border-radius:16px;
   background: linear-gradient(180deg, var(--panel), color-mix(in oklab, var(--panel), #000 6%));
-  border:1px solid color-mix(in oklab, var(--muted), transparent 82%);
-  box-shadow: 0 20px 60px rgba(0,0,0,.28);
+  border:1px solid color-mix(in oklab, var(--muted), transparent 82%); box-shadow:0 20px 60px rgba(0,0,0,.28);
 }
-
-.auth-head{
-  text-align:center;
-  margin-bottom: 12px;
-}
-.auth-icon{
-  font-size: 28px;
-  line-height: 1;
-  margin-bottom: 6px;
-}
-.auth-title{
-  margin: 0;
-  font-size: 20px;
-}
-.auth-sub{
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.auth-form{
-  display:grid;
-  gap: 12px;
-  margin-top: 10px;
-}
-.auth-field label{
-  display:block;
-  font-weight:700;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-.auth-msg{
-  margin-top: 4px;
-  color: #ef4444;
-  font-size: 14px;
-}
-.auth-btn{
-  width: 100%;
-  margin-top: 4px;
-}
-
-.auth-foot{
-  margin-top: 14px;
-  text-align:center;
-}
-
-/* Responsive tweaks */
+.auth-head{ text-align:center; margin-bottom:12px; }
+.auth-icon{ font-size:28px; line-height:1; margin-bottom:6px; }
+.auth-title{ margin:0; font-size:20px; }
+.auth-sub{ margin:4px 0 0; color:var(--muted); font-size:14px; }
+.auth-form{ display:grid; gap:12px; margin-top:10px; }
+.auth-field label{ display:block; font-weight:700; margin-bottom:6px; font-size:14px; }
+.auth-msg{ margin-top:4px; color:#ef4444; font-size:14px; }
+.auth-btn{ width:100%; margin-top:4px; }
+.auth-foot{ margin-top:14px; text-align:center; }
 @media (max-width: 420px){
-  .auth-card{ padding: 14px 12px; }
-  .auth-title{ font-size: 18px; }
+  .auth-card{ padding:14px 12px; }
+  .auth-title{ font-size:18px; }
 }
-
-
-

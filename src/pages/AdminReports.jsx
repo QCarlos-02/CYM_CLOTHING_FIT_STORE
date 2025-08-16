@@ -110,6 +110,8 @@ export default function AdminReports() {
 
   /* ========= Exportar a PDF ========= */
   const exportPdf = () => {
+
+    
     const w = window.open("", "_blank");
     if (!w) {
       alert("Permite ventanas emergentes para exportar el PDF.");

@@ -1,28 +1,41 @@
 import Layout from "../components/Layout";
 import { useCart } from "../store/CartContext";
 
-const WHATSAPP_NUMBER = "573045378344"; // <-- REEMPLAZA por tu número con indicativo
-function buildWhatsAppMessage(items, total) {
+const WHATSAPP_NUMBER = "573045378344"; // tu número
+
+function buildWhatsAppMessage(items, total, clienteNombre = "*Tu nombre?*") {
   const lines = [];
 
-  // Saludo primero
-  lines.push("Hola, me gustaría realizar el siguiente pedido:\n");
+  // 👋 Saludo
+  lines.push(`Hola *Clothing Fit*, un gusto saludarlos. Soy ${clienteNombre} \u{1F60A}`);
+  lines.push(`Quisiera confirmar el siguiente pedido realizado desde la página:\n`);
 
-  // Lista de productos
+  // 🛍️ Lista de productos
   items.forEach(i => {
     lines.push(
-      `• ${i.name}${i.size ? ` - Talla: ${i.size}` : ""}${
-        i.color ? ` - Color: ${i.color}` : ""
-      } x${i.qty} → $${(i.price * i.qty).toLocaleString("es-CO")}`
+      `• *Producto:* ${i.name}` +
+      (i.color ? `\n• *Color:* ${i.color}` : "") +
+      (i.size ? `\n• *Talla:* ${i.size}` : "") +
+      `\n• *Cantidad:* ${i.qty} unidades` +
+      `\n• *Subtotal:* $${(i.price * i.qty).toLocaleString("es-CO")}\n`
     );
   });
 
-  // Total
-  lines.push(`\nTotal: $${total.toLocaleString("es-CO")}`);
+  // 💰 Total
+  lines.push(`*Total:* $${total.toLocaleString("es-CO")}\n`);
 
-  // Retornar codificado para WhatsApp
+  // 🙏 Despedida
+  lines.push(`Por favor indíquenme cómo continuar con el proceso de pago y envío.`);
+  lines.push(`Muchas gracias por su amable atención \u{1F5A4}`);
+
+  // Retornar codificado
   return encodeURIComponent(lines.join("\n"));
 }
+
+
+
+
+
 
 
 export default function CartPage() {
