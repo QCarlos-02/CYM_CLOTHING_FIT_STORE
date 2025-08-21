@@ -411,3 +411,112 @@ html[data-theme="dark"] .footer-socials .ico-tt:focus-visible{ color:#fff; }
   .auth-card{ padding:14px 12px; }
   .auth-title{ font-size:18px; }
 }
+
+
+
+
+
+
+/* ===== Price block (detalle producto) ===== */
+.price-wrap { display: grid; gap: 6px; margin-bottom: 10px; }
+.price-line { display: flex; align-items: baseline; gap: 10px; }
+
+.price-label { font-weight: 800; min-width: 92px; }
+.price-old { text-decoration: line-through; color: var(--muted); }
+.price-new { font-weight: 800; font-size: 1.6rem; color: var(--primary); }
+.price-new.no-discount { color: var(--text); }
+
+.discount-badge{
+  display:inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 800;
+  background: var(--danger);
+  color: #fff;
+  line-height: 1.2;
+}
+
+
+
+
+
+
+/* ===== Detalle de producto: layout fluido ===== */
+.product-detail-grid{
+  display:grid;
+  gap: clamp(12px, 2.5vw, 20px);
+  align-items: start;
+}
+
+/* En pantallas medianas/grandes: 2 columnas */
+@media (min-width: 900px){
+  .product-detail-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Imagen: que se adapte y nunca se deforme */
+.product-detail-img{
+   display:block;
+  width:100%;
+  height:auto;
+  max-height: clamp(240px, 50vh, 680px);
+  object-fit: contain;        /* o 'cover' si prefieres recorte */
+  background: transparent !important;
+  border-radius: 0 !important; /* sin esquinas redondeadas */
+}
+
+/* ===== Tipografías escalables ===== */
+h2{
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  margin: 0 0 6px;
+}
+.price-new{
+  font-size: clamp(1.25rem, 3.2vw, 1.8rem);
+}
+.price-label{ font-size: clamp(.9rem, 2.2vw, 1rem); }
+.price-old{ font-size: clamp(.95rem, 2.4vw, 1.1rem); }
+.discount-badge{ font-size: clamp(.7rem, 1.8vw, .85rem); }
+
+/* ===== Controles legibles en móviles ===== */
+.product-detail-grid select,
+.product-detail-grid input[type="number"]{
+  width: 100%;
+  max-width: 360px;    /* en desktop no se vuelve gigantesco */
+}
+
+/* En móviles, deja los controles 100% ancho y separa mejor */
+@media (max-width: 480px){
+  .product-detail-grid select,
+  .product-detail-grid input[type="number"],
+  .product-detail-grid .btn{
+    width: 100%;
+  }
+  .product-detail-grid .btn{ margin-top: 10px; }
+}
+
+/* ===== Bloque de precios (del mensaje anterior) ===== */
+.price-wrap { display:grid; gap: 6px; margin-bottom: 10px; }
+.price-line { display:flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+
+.price-label { font-weight: 800; min-width: 92px; }
+.price-old { text-decoration: line-through; color: var(--muted); }
+.price-new { font-weight: 800; color: var(--primary); }
+.price-new.no-discount { color: var(--text); }
+
+.discount-badge{
+  display:inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-weight: 800;
+  background: var(--danger);
+  color: #fff;
+  line-height: 1.2;
+}
+
+/* Ajustes de márgenes para bloques de “Detalles” */
+.product-detail-grid p{ margin: .35rem 0; }
+
+
+

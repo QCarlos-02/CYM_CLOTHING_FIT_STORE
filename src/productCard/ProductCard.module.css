@@ -1,58 +1,64 @@
-/* === Card contenedor === */
 .card{
   display:block;
-  background: var(--card);
-  border-radius: 12px;
-  border: 1px solid color-mix(in oklab, var(--muted), transparent 85%);
-  overflow:hidden;
-  text-align:center;
-  transition: transform .2s ease;
-  color: inherit;
-  text-decoration: none;
-}
-.card:hover{ transform: translateY(-4px); }
-
-/* === Caja de imagen: mantiene proporción estable === */
-.imgWrapper{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;              /* 👈 proporción 4:5 (mejor que cuadrado para ropa) */
   background: var(--panel);
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  border-bottom: 1px solid color-mix(in oklab, var(--muted), transparent 85%);
+  border:1px solid color-mix(in oklab, var(--muted), transparent 85%);
+  border-radius:16px;
+  padding:12px;
+  transition:transform .08s ease, box-shadow .12s ease;
+}
+.card:hover{ transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,.18); }
+
+.imgWrapper{
+  position:relative;
+  aspect-ratio: 1 / 1;        /* cuadrado limpio */
+  overflow:hidden;
+  border-radius:12px;
+  background: color-mix(in oklab, var(--panel), #000 6%);
 }
 
-/* === Imágenes: SIEMPRE completas === */
+/* Badge de descuento */
+.badge{
+  position:absolute; top:10px; left:10px;
+  background: var(--danger);
+  color:#fff;
+  font-weight:800;
+  font-size:.85rem;
+  padding: 4px 8px;
+  border-radius:999px;
+  z-index:2;
+  box-shadow: 0 6px 16px rgba(0,0,0,.25);
+}
+
 .img{
-  position: absolute;               /* para poder hacer el fade */
-  inset: 0;
-  margin: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;              /* 👈 clave: no recorta */
-  transition: opacity .35s ease;
- 
+  width:100%; height:100%;
+  object-fit:contain;
+  transition: opacity .18s ease;
+}
+.front{ position:absolute; inset:0; z-index:1; }
+.back{ position:absolute; inset:0; opacity:0; }
+.card:hover .front{ opacity:0; }
+.card:hover .back{ opacity:1; }
+
+.info{ padding:10px 4px 2px; text-align:center; }
+.name{
+  margin:8px 0 6px;
+  font-size: clamp(.95rem, 2.2vw, 1.05rem);
+  font-weight:800;
+  color: var(--text);
+  min-height: 1.6em;
 }
 
-/* Estado inicial: front visible, back oculta */
-.front{ opacity: 1; z-index: 2; }
-.back { opacity: 0; z-index: 1; }
-
-/* En desktop (hover real) hacemos el cambio de cara */
-@media (hover:hover) and (pointer:fine){
-  .imgWrapper:hover .front{ opacity: 0; }
-  .imgWrapper:hover .back { opacity: 1; }
+.prices{
+  display:flex; justify-content:center; align-items:baseline; gap:10px;
 }
-
-/* En móvil no hay hover: se queda la frontal */
-@media (hover:none){
-  .front{ opacity: 1 !important; }
-  .back { opacity: 0 !important; }
+.old{
+  color: var(--muted);
+  text-decoration: line-through;
+  font-size: .95rem;
 }
-
-/* === Meta === */
-.info{ padding: 8px 10px 12px; }
-.name{ font-size: 1rem; margin: 4px 0; font-weight: 700; }
-.price{ font-weight: 800; color: var(--primary); }
+.new{
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.noDisc{ color: var(--text); }

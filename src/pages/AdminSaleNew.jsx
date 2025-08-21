@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../supabase";
 import { useNavigate } from "react-router-dom";
-import Logo2 from "../assets/LOGO2.png"; // <-- logo para el ticket
+import Logo2 from "../assets/LOGO2.png"; // logo para el ticket
 
 /* ====== Config ====== */
 const PAYMENT_METHODS = [
@@ -16,6 +16,22 @@ const PAYMENT_METHODS = [
 
 const fmtCOP = (n) =>
   new Intl.NumberFormat("es-CO").format(Math.round(Number(n || 0)));
+
+/* ===== helper: precio efectivo con descuento en custom_attrs ===== */
+function getEffectivePrice(product) {
+  const attrs = Array.isArray(product.custom_attrs)
+    ? product.custom_attrs
+    : (product.custom_attrs || []);
+  const disc = attrs.find(
+    a => (a?.label || "").toLowerCase() === "precio con descuento"
+  );
+  const discPrice = Number(disc?.value);
+  const base = Number(product.price || 0);
+  if (!isNaN(discPrice) && discPrice > 0 && discPrice < base) {
+    return discPrice;
+  }
+  return base;
+}
 
 /* ====== Subcomponentes ====== */
 
@@ -60,6 +76,7 @@ function ItemRow({ it, onQty, onPrice, onRemove }) {
   );
 }
 
+/* ===== Busca y agrega productos usando el precio efectivo (con descuento si aplica) ===== */
 function ProductSearch({ onPick }) {
   const [q, setQ] = useState("");
   const [res, setRes] = useState([]);
@@ -74,12 +91,12 @@ function ProductSearch({ onPick }) {
       setLoading(true);
       const { data, error } = await supabase
         .from("products")
-        .select("id, name, price, stock, images")
+        .select("id, name, price, stock, images, custom_attrs") // <-- IMPORTANTE
         .eq("active", true)
         .ilike("name", `%${q.trim()}%`)
         .order("created_at", { ascending: false })
         .limit(10);
-      setRes(error ? [] : data || []);
+      setRes(error ? [] : (data || []));
       setLoading(false);
     }, 300);
     return () => clearTimeout(t);
@@ -99,40 +116,52 @@ function ProductSearch({ onPick }) {
 
         {!loading && !!res.length && (
           <div style={{ display: "grid", gap: 8 }}>
-            {res.map((p) => (
-              <div
-                key={p.id}
-                className="admin-row"
-                style={{ gridTemplateColumns: "64px 1fr auto", cursor: "pointer" }}
-                onClick={() =>
-                  onPick?.({
-                    product_id: p.id,
-                    name: p.name,
-                    price: Number(p.price || 0),
-                    qty: 1,
-                    stock: Number(p.stock || 0),
-                    image: p.images?.front || p.images?.full || p.images?.back || "",
-                  })
-                }
-              >
-                <img
-                  src={p.images?.front || p.images?.full || p.images?.back || ""}
-                  alt={p.name}
-                  style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8 }}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div>
-                  <div style={{ fontWeight: 600 }}>{p.name}</div>
-                  <small style={{ color: "var(--muted)" }}>
-                    Stock: {p.stock} · Precio: $ {fmtCOP(p.price)}
-                  </small>
+            {res.map((p) => {
+              const eff = getEffectivePrice(p);
+              const hasDiscount = eff < Number(p.price || 0);
+              return (
+                <div
+                  key={p.id}
+                  className="admin-row"
+                  style={{ gridTemplateColumns: "64px 1fr auto", cursor: "pointer" }}
+                  onClick={() =>
+                    onPick?.({
+                      product_id: p.id,
+                      name: p.name,
+                      price: eff, // <-- usamos precio efectivo
+                      qty: 1,
+                      stock: Number(p.stock || 0),
+                      image: p.images?.front || p.images?.full || p.images?.back || "",
+                    })
+                  }
+                >
+                  <img
+                    src={p.images?.front || p.images?.full || p.images?.back || ""}
+                    alt={p.name}
+                    style={{ width: 64, height: 64, objectFit: "cover", borderRadius: 8 }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{p.name}</div>
+                    <small style={{ color: "var(--muted)" }}>
+                      Stock: {p.stock} ·{" "}
+                      {hasDiscount ? (
+                        <>
+                          Precio: <s>$ {fmtCOP(p.price)}</s>{" "}
+                          <strong>$ {fmtCOP(eff)}</strong>
+                        </>
+                      ) : (
+                        <>Precio: $ {fmtCOP(p.price)}</>
+                      )}
+                    </small>
+                  </div>
+                  <div style={{ alignSelf: "center" }}>
+                    <button className="btn">Agregar</button>
+                  </div>
                 </div>
-                <div style={{ alignSelf: "center" }}>
-                  <button className="btn">Agregar</button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
@@ -220,7 +249,6 @@ function receiptHtml({ logoUrl, saleNo, createdAt, customer, channel, method, it
   <div class="foot">¡Gracias por tu compra!<br/>Síguenos en Instagram: @clothing_fitstore</div>
 
   <script>
-    // imprimir automáticamente
     window.onload = function(){
       setTimeout(function(){ window.print(); }, 50);
     };
@@ -315,7 +343,7 @@ export default function AdminSaleNew() {
         p_items: items.map((it) => ({
           product_id: it.product_id,
           qty: it.qty,
-          price: it.price,
+          price: it.price, // ya viene con descuento si aplica
         })),
         p_user_id: user?.id || null,
       };
@@ -323,8 +351,8 @@ export default function AdminSaleNew() {
       const { error } = await supabase.rpc("create_sale", payload);
       if (error) throw error;
 
-      // ✅ Abrir ticket inmediatamente con los datos en memoria
-      const saleNo = "S" + Date.now().toString().slice(-8); // si tu RPC devuelve ID, úsalo aquí
+      // Ticket con datos en memoria
+      const saleNo = "S" + Date.now().toString().slice(-8);
       openReceipt({
         logoUrl: Logo2,
         saleNo,
