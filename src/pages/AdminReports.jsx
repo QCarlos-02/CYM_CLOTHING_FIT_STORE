@@ -12,9 +12,11 @@ const fmtCOP = (n) =>
 const METHODS = [
   { v: "", label: "(Todos)" },
   { v: "efectivo", label: "Efectivo" },
-  { v: "transferencia", label: "Transferencia" },
+  { v: "nequi", label: "Nequi" },
+  { v: "Bancolombia", label: "Bancolombia" },
+  { v: "daviplata", label: "Daviplata" },
   { v: "tarjeta", label: "Tarjeta" },
-  { v: "otro", label: "Otro" },
+  { v: "Otro", label: "Otro" },
 ];
 
 export default function AdminReports() {
